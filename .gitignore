@@ -11,3 +11,4 @@
 /**/*.dvi
 /**/*.synctex.gz
 /**/*.pdf
+/**/*..pcapng

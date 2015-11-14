@@ -35,6 +35,57 @@ Afin de connaître avec plus de détails le résultat du scan de vulnérabilité
     \includegraphics[width=.7\textwidth]{img/esiea.jpeg}
     \caption{Rapport de scan de vulnérabilités de \textit{Windows 7}}
 \end{figure}
+Il est aussi possible d'exporter un rapport complet au format PDF (c.f. annexe \ref{VULNW7}).
+
+\subsubsection{Mode \enquote{credentials}}
+Ce mode va permettre à OpenVAS d'accéder à de nombreux services sur le poste cible, permettant de de collecter plus d'informations quand à la sécurité du système à analyser.\\
+Afin de se connecter en mode \enquote{credentials} sous Windows, OpenVAS va utiliser le protocole SMB.\\
+Il est possible de vérifier si le mode \enquote{credentials} a bien été utilisé de plusieurs manières différentes. Dans notre cas, nous en présenterons deux :
+\begin{itemize}
+ \item Une étude du flux réseau enregistré avec Wireshark pendant le scan
+ \item Le rapport de scan de vulnérabilité généré par OpenVAS
+\end{itemize}
+\paragraph{Flux réseau}~\\\par
+Nous savons qu'OpenVAS va utiliser le protocole SMB pour pouvoir réaliser son scan en mode \enquote{credentials}. Nous pouvons alors filtrer le flux réseau capté durant cette période afin de ne trouver que les trames nous intéressant.\\
+Dans la figure \ref{fig:1}, il est possible de voir qu'OpenVAS (présent sur le poste $192.168.1.22$) essaye de se connecter en temps que \textit{root} sur le poste cible (paquet 9994).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{img/ws1.png}
+    \caption{Tentative de connexion en \textit{root} sur la cible Windows}
+    \label{fig:1}
+\end{figure}
+Comme nous pouvons le voir, la réponse du poste cible est négative (paquet 9995). Cette dernière précise \enquote{\textit{NT Status: STATUS\_LOGON\_FAILURE (0xc000006d)}}. L'accès en mode \enquote{credentials} n'a pas été configuré pour l'administrateur.\\
+C'est pourquoi, lors de son deuxième essai, OpenVAS va tenter de se connecter grâce aux identifiants qui lui été fournis lors de la configuration de la cible. Ici, c'est avec l'utilisateur \enquote{\textit{bobby}} qu'il va le faire comme le montre la figure \ref{fig:2} (paquet 10166) :
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{img/ws2.png}
+    \caption{Tentative de connexion en temps que \enquote{\textit{bobby}} sur la cible Windows}
+    \label{fig:2}
+\end{figure}
+Cette fois-ci, la connexion n'est pas un échec puisque le poste cible va alors répondre par \enquote{\textit{NT Status: STATUS\_SUCCESS (0x00000000)}} (paquet 10167). \\
+Les échanges fait par les paquets 10168 et 10169 montrent qu'il a été possible d'accéder au registre de la cible.\\
+Plus tard dans les échanges, nous pouvons constater qu'OpenVas a aussi accès aux disques partagés (ici C:), comme nous pouvons le voir sur la figure \ref{fig:3} (paquet 193383) :
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{img/ws3.png}
+    \caption{Accès aux disques partagés de la cible}
+    \label{fig:3}
+\end{figure}
+Enfin, les échanges effectués par les paquets 326638 et 326639 nous prouvent qu'OpenVAS a aussi pu accéder aux données de l'administrateur. Nous pouvons voir cela sur la figure \ref{fig:5}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{img/ws4.png}
+    \caption{Accès aux données administrateur de la cible}
+    \label{fig:5}
+\end{figure}
+\paragraph{Rapport de vulnérabilités}~\\\par
+Une autre façon de vérifier si le scan s'est bien effectué en mode \enquote{credentials} est de lire le rapport fourni par OpenVAS directement. En effet, sur la seconde page de ce dernier, nous pouvons trouver la partie \textit{Host Authentications}. Comme le montre la figure \ref{fig:4}, nous pouvons voir que notre scan, OpenVAS a bien réussi à se connecter en temps que \textit{bobby} via le port 445 avec le protocole SMB sur notre cible (\textit{192.168.1.25 - blackyfox-1.home}).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{img/rep1.png}
+    \caption{Résultat de l'authentification d'OpenVAS sur notre cible}
+    \label{fig:4}
+\end{figure}
 
 
 \subsection{Cible sous Linux}
