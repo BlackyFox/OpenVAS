@@ -1,0 +1,49 @@
+\section{Réalisation de scans en mode \enquote{credentials}}
+\subsection{Cible sous \textit{Windows}}
+Pour ce scan, nous avons utilisé une version de Windows 7 SP1 sans mises à jours (version crackée).\\
+Après avoir suivi les instructions quand à la création d'un utilisateur et la créations de règles de pare-feu sur la cible, nous avions le client prêt avec la configuration suivante:
+\begin{description}
+ \item[Système d'exploitation :] Windows 7 SP1
+ \item[Nombre d'utilisateurs :] 2
+ \item[Nom de l'utilisateur cible :] bobby
+ \item[Description de l'utilisateur :] bobbybo
+ \item[Mot de passe du compte :] azerty
+ \item[Adresse IP :] $192.168.1.25$
+\end{description}
+
+Afin de réaliser le scan de notre cible en mode \enquote{credentials}, nous avons suivi les étapes suivantes :
+\begin{enumerate}
+ \item Création d'un nouveau \textit{credentials} pour Windows
+ \item Nous avons ensuite créé une cible (target) utilisant l'authentification en SMB\footnote{Server Message Block\cite{SMB}}\\
+ \begin{figure}[H]
+    \centering
+    \includegraphics[width=.7\textwidth]{img/esiea.jpeg}
+    \caption{Cible \textit{Windows 7}}
+ \end{figure}
+ \item Une fois la cible créée, nous avions créé une tâche pour cette cible.
+ \item Une fois créée, il ne nous restait plus qu'à démarrer la tâche et à attendre que cette dernière se finisse.
+ \item Une fois terminée, nous pouvions avoir le résultat suivant :
+ \begin{figure}[H]
+    \centering
+    \includegraphics[width=.7\textwidth]{img/esiea.jpeg}
+    \caption{Résultat du scan de la cible \textit{Windows 7}}
+ \end{figure}
+\end{enumerate}
+Afin de connaître avec plus de détails le résultat du scan de vulnérabilités, il nous est possible de consulter le rapport en ligne suivant :
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.7\textwidth]{img/esiea.jpeg}
+    \caption{Rapport de scan de vulnérabilités de \textit{Windows 7}}
+\end{figure}
+
+
+\subsection{Cible sous Linux}
+Pour le scan sous Linux, nous avons utilisé une version non mise à jour d'Ubuntu 14.10.\\
+Après avoir créé un nouvel utilisateur en suivant la documentation fournie pour ce LAB, nous avions la configuration suivante sur la machine cible :
+\begin{description}
+ \item[Système d'exploitation :] Ubuntu 14.10
+ \item[Nombre d'utilisateurs :] 3
+ \item[Nom de l'utilisateur cible :] boby
+ \item[Mot de passe du compte :] azerty
+ \item[Adresse IP :] $192.168.1.10$
+\end{description}
