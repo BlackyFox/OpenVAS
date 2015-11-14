@@ -8,3 +8,13 @@ Afin de pouvoir installer OpenVAS sur notre système (ici Linux Mint 17.2 x64), 
  \item Greenbone Security Assistant (GSA) 6.0.6
 \end{itemize}
 Ces paquets nous permettent de compiler la dernière version stable d'OpenVAS, la version 8.
+\subsection{Installation des prérequis}
+Avant de pouvoir compiler et installer OpenVAS correctement, nous avons du installer les prérequis. Ces derniers nous étaient donnés dans le sujet du LAB. Ainsi, nous n'avons eu qu'à effectuer la commande suivante pour les installer :
+\begin{lstlisting}[style=custombash]
+apt-get install libglib2.0-devel libgnutls-devel libpcap-devel libgpgme-devel uuid-devel libxml2-devel libxslt-devel lib64ssh-devel lib64ldap2.4_2-devel libmicrohttpd-devel libsqlite3-devel pkgconfig xsltproc flex gcc cmake libksba-devel make bison doxygen wget libgcrypt11 autoconf nsis alien
+\end{lstlisting}
+Nous avons ensuite installé \textit{XML to Man} ainsi que le module \textit{WMI}.
+\subsection{Compilation et installation}
+Afin de compiler et installer correctement OpenVAS, nous avons suivi la procédure décrite dans le sujet de ce LAB.
+\subsection{Compléments}
+TODO

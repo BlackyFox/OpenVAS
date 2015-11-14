@@ -87,7 +87,6 @@ Une autre façon de vérifier si le scan s'est bien effectué en mode \enquote{c
     \label{fig:4}
 \end{figure}
 
-
 \subsection{Cible sous Linux}
 Pour le scan sous Linux, nous avons utilisé une version non mise à jour d'Ubuntu 14.10.\\
 Après avoir créé un nouvel utilisateur en suivant la documentation fournie pour ce LAB, nous avions la configuration suivante sur la machine cible :
@@ -98,3 +97,59 @@ Après avoir créé un nouvel utilisateur en suivant la documentation fournie po
  \item[Mot de passe du compte :] azerty
  \item[Adresse IP :] $192.168.1.10$
 \end{description}
+
+Afin de réaliser le scan de notre cible en mode \enquote{credentials}, nous avons suivi les étapes suivantes :
+\begin{enumerate}
+ \item Création d'un nouveau \textit{credentials} pour Linux
+ \item Nous avons ensuite créé une cible (target) utilisant l'authentification en SSH\footnote{Secure Shell\cite{SMB}}\\
+ \begin{figure}[H]
+    \centering
+    \includegraphics[width=.7\textwidth]{img/esiea.jpeg}
+    \caption{Cible \textit{Ubuntu 14.10}}
+ \end{figure}
+ \item Une fois la cible créée, nous avions créé une tâche pour cette cible.
+ \item Une fois créée, il ne nous restait plus qu'à démarrer la tâche et à attendre que cette dernière se finisse.
+ \item Une fois terminée, nous pouvions avoir le résultat suivant :
+ \begin{figure}[H]
+    \centering
+    \includegraphics[width=.7\textwidth]{img/esiea.jpeg}
+    \caption{Résultat du scan de la cible \textit{Ubuntu 14.10}}
+ \end{figure}
+\end{enumerate}
+Afin de connaître avec plus de détails le résultat du scan de vulnérabilités, il nous est possible de consulter le rapport en ligne suivant :
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.7\textwidth]{img/esiea.jpeg}
+    \caption{Rapport de scan de vulnérabilités d'\textit{Ubuntu 14.10}}
+\end{figure}
+Il est aussi possible d'exporter un rapport complet au format PDF (c.f. annexe \ref{VULNU}).
+
+\subsubsection{Mode \enquote{credentials}}
+Ce mode va permettre à OpenVAS d'accéder à de nombreux services sur le poste cible, permettant de de collecter plus d'informations quand à la sécurité du système à analyser.\\
+Afin de se connecter en mode \enquote{credentials} sous Linux, OpenVAS va utiliser le protocole SSH.\\
+Il est possible de vérifier si le mode \enquote{credentials} a bien été utilisé de plusieurs manières différentes. Dans notre cas, nous en présenterons deux :
+\begin{itemize}
+ \item Une étude du flux réseau enregistré avec Wireshark pendant le scan
+ \item Le rapport de scan de vulnérabilité généré par OpenVAS
+\end{itemize}
+
+\paragraph{Flux réseau}~\\\par
+Nous savons qu'OpenVAS va utiliser le protocole SSH pour pouvoir réaliser son scan en mode \enquote{credentials}. Nous pouvons alors filtrer le flux réseau capté durant cette période afin de ne trouver que les trames nous intéressant.\\
+Dans la figure \ref{fig:6}, il est possible de voir qu'OpenVAS (présent sur le poste $192.168.1.22$) est en train de réaliser une connexion SSH sur notre poste cible (paquets 11294 à 11332).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{img/ws5.png}
+    \caption{Tentative de connexion en \textit{root} sur la cible Windows}
+    \label{fig:6}
+\end{figure}
+On peut remarquer que des paquets 11325 à 11332 l'échange de clés est effectué entre le client et le serveur. Puis, dès le paquet 11334, les échanges sont chiffrés. Cela montre que la connexion s'est bien effectuée entre le client et le serveur.
+
+\paragraph{Rapport de vulnérabilités}~\\\par
+Comme pour Windows, il est possible de savoir si le mode \enquote{credentials} s'est bien effectué lors du scan de vulnérabilités. Ainsi, comme nous pouvons le voir sur la figure \ref{fig:7}, le rapport de scan de vulnérabilités a pu se connecter en SSH correctement :
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{img/rep2.png}
+    \caption{Rapport de scan de vulnérabilités d'Ubuntu 14.10}
+    \label{fig:7}
+\end{figure}
+Ainsi, nous pouvons confirmer qu'OpenVAS s'est bien connecté en SSH (port 22) avec le compte \textit{boby} sur le poste \textit{blackyfox-easynote-lm86.home} (@192.168.1.10).
